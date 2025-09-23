@@ -1,0 +1,12 @@
+node_modules/
+vendor/
+dist/
+build/
+*.min.js
+*.min.css
+composer.lock
+package-lock.json
+.git/
+.DS_Store
+*.log
+wp-config.php

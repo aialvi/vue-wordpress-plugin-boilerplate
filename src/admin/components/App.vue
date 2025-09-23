@@ -2,7 +2,9 @@
 	<div class="aialvi-admin-app">
 		<div class="admin-header">
 			<h1>{{ title }}</h1>
-			<p class="description">{{ description }}</p>
+			<p class="description">
+				{{ description }}
+			</p>
 		</div>
 
 		<div class="admin-content">
@@ -13,16 +15,15 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 export default {
-	name: "App",
+	name: 'App',
 	setup() {
 		const title = ref("Aminul's Vue Plugin");
 		const description = ref(
-			"A powerful WordPress plugin built with Vue.js",
+			'A powerful WordPress plugin built with Vue.js'
 		);
-
 
 		return {
 			title,
@@ -36,8 +37,8 @@ export default {
 .aialvi-admin-app {
 	max-width: 1200px;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		sans-serif;
+	font-family:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .admin-header {
