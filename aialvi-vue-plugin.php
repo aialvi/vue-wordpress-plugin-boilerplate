@@ -14,6 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Define plugin constants for security
+define( 'AIALVI_PLUGIN_VERSION', '1.0.0' );
+define( 'AIALVI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'AIALVI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'AIALVI_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+define( 'AIALVI_PLUGIN_TEXT_DOMAIN', 'aialvi-vue-plugin' );
+
 // Include the main plugin class.
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-aialvi-vue.php';
 
