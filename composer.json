@@ -1,0 +1,21 @@
+{
+  "name": "aialvi/aialvi-vue-plugin",
+  "description": "A WordPress plugin built with Vue 3, Vite, and Webpack.",
+  "type": "wordpress-plugin",
+  "require": {
+    "php": ">=7.4",
+    "composer/installers": "^1.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "AIALVI_Vue_Plugin\\": "src/php/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}
