@@ -12,12 +12,14 @@
     "zip": "node scripts/create-clean-zip.js",
     "watch": "webpack --watch",
     "preview": "vite preview",
-    "lint": "npm run lint:js",
+    "lint": "npm run lint:js && npm run lint:php",
     "lint:js": "wp-scripts lint-js src/ --ext .js,.vue",
     "lint:js:fix": "wp-scripts lint-js src/ --ext .js,.vue --fix",
+    "lint:php": "composer run lint:phpcs",
+    "lint:php:fix": "composer run fix:phpcs",
     "format": "wp-scripts format \"src/**/*.{js,vue,css,scss,json,md}\"",
     "format:check": "wp-scripts format \"src/**/*.{js,vue,css,scss,json,md}\" --check",
-    "lint:fix": "npm run lint:js:fix && npm run format",
+    "lint:fix": "npm run lint:js:fix && npm run lint:php:fix && npm run format",
     "prepare": "husky"
   },
   "dependencies": {
@@ -56,6 +58,10 @@
     ],
     "*.{json,md}": [
       "wp-scripts format"
+    ],
+    "*.php": [
+      "composer run fix:phpcs",
+      "composer run lint:phpcs"
     ]
   },
   "author": "Aminul Islam Alvi",
