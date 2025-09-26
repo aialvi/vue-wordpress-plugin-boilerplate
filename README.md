@@ -19,5 +19,7 @@ To start developing the plugin:
 
 1. Clone the repository.
 2. Run `npm install` to install JavaScript dependencies.
-3. Use `npm run dev` to start the development server with Vite.
-4. For production builds, use `npm run build`.
+3. Run `composer install` and `composer dump-autoload` to set up PHP
+   dependencies and autoloading.
+4. Use `npm run dev` to start the development server with Vite.
+5. For production builds, use `npm run build`.
