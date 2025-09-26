@@ -1004,6 +1004,10 @@ export default {
 	margin-top: 6px;
 }
 
+.dashicons-update {
+	margin-top: 4px;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
 	.table-controls {

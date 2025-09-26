@@ -262,6 +262,7 @@ export default {
 		const store = useStore();
 		const chartCanvas = ref(null);
 		let chartInstance = null;
+		let isCreatingChart = false; // Prevent race conditions
 
 		// Computed properties
 		const loading = computed(() => store.state.loading);
@@ -418,22 +419,46 @@ export default {
 
 		// Create or update chart
 		const createChart = async () => {
+			// Prevent race conditions. Only one chart creation at a time
+			if (isCreatingChart) {
+				return;
+			}
+
+			if (loading.value) {
+				return;
+			}
+
 			if (!chartCanvas.value || !graphData.value.length) {
 				return;
 			}
 
+			isCreatingChart = true;
+
 			try {
 				// Destroy existing chart if it exists
 				if (chartInstance) {
-					chartInstance.destroy();
+					try {
+						chartInstance.destroy();
+					} catch (destroyError) {
+						store.dispatch(
+							'setError',
+							`Failed to destroy chart: ${destroyError.message}`
+						);
+					}
 					chartInstance = null;
 				}
 
 				await nextTick();
 
-				// Double-check canvas is available
+				// Double-check canvas is available after nextTick
 				if (!chartCanvas.value) {
 					return;
+				}
+
+				// Clear any existing Chart.js instance on this canvas
+				const existingChart = ChartJS.getChart(chartCanvas.value);
+				if (existingChart) {
+					existingChart.destroy();
 				}
 
 				const ctx = chartCanvas.value.getContext('2d');
@@ -445,6 +470,8 @@ export default {
 					'setError',
 					`Failed to create chart: ${chartError.message}`
 				);
+			} finally {
+				isCreatingChart = false;
 			}
 		};
 
@@ -452,19 +479,45 @@ export default {
 		const refreshData = async () => {
 			try {
 				await store.dispatch('fetchData');
+				// Force chart recreation after data is loaded
+				await nextTick();
+				await createChart();
 			} catch (refreshError) {
 				// Error is handled by the store
 			}
 		};
 
-		// Watch for data changes
+		// Watch for data changes, but not during loading
 		watch(
 			graphData,
-			() => {
-				createChart();
+			async newData => {
+				// Only recreate chart if we're not in loading state and have data
+				if (
+					!loading.value &&
+					newData &&
+					newData.length > 0 &&
+					!isCreatingChart
+				) {
+					await nextTick();
+					await createChart();
+				}
 			},
 			{ deep: true }
 		);
+
+		// Watch loading state to recreate chart when loading finishes
+		watch(loading, async (isLoading, wasLoading) => {
+			// When loading finishes and we have data, recreate the chart
+			if (
+				wasLoading &&
+				!isLoading &&
+				graphData.value.length > 0 &&
+				!isCreatingChart
+			) {
+				await nextTick();
+				await createChart();
+			}
+		});
 
 		// Initialize component
 		onMounted(async () => {
@@ -474,16 +527,24 @@ export default {
 				store.state.data.graph.length === 0
 			) {
 				await refreshData();
+			} else {
+				await nextTick();
+				await createChart();
 			}
-
-			await nextTick();
-			createChart();
 		});
 
 		// Cleanup
 		onBeforeUnmount(() => {
+			isCreatingChart = false;
 			if (chartInstance) {
-				chartInstance.destroy();
+				try {
+					chartInstance.destroy();
+				} catch (destroyError) {
+					store.dispatch(
+						'setError',
+						`Failed to destroy chart on unmount: ${destroyError.message}`
+					);
+				}
 				chartInstance = null;
 			}
 		});
@@ -736,6 +797,10 @@ export default {
 	font-size: 16px;
 	line-height: 1;
 	text-decoration: none;
+}
+
+.dashicons-update {
+	margin-top: 4px;
 }
 
 /* Responsive design */
