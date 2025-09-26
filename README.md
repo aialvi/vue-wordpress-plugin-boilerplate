@@ -2,7 +2,9 @@
 
 ## Description
 
-This is a WordPress plugin built with Vue 3 and WordPress.
+This is a WordPress plugin built with Vue 3 that displays page rankings within
+your WordPress site. It provides an interactive interface for viewing page rank
+data directly from the WordPress admin dashboard.
 
 ## Installation
 
