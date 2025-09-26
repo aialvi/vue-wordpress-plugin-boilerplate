@@ -1000,6 +1000,10 @@ export default {
 	text-decoration: none;
 }
 
+.dashicons-email-alt {
+	margin-top: 6px;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
 	.table-controls {
